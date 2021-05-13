@@ -1,6 +1,7 @@
 const path = require('path')
 const express = require('express')
 const xss = require('xss')
+const logger = require('../logger')
 const ProfileTypesService = require('./profileTypes-service')
 
 const profileTypesRouter = express.Router()
@@ -26,6 +27,7 @@ profileTypesRouter
     .post(bodyParser, (req, res, next) => {
         for (const field of ['name', 'bust', 'waist', 'hips']) {
             if (!req.body[field]) {
+                logger.error(`'${field}' is required`)
                 return res.status(400).send({
                     error: { message: `'${field}' is required` }
                 })
@@ -41,6 +43,7 @@ profileTypesRouter
             newProfileType
         )
             .then(profileType => {
+                logger.info(`ProfileType with id ${profileType.id} created`)
                 res
                     .status(201)
                     .location(path.posix.join(req.originalUrl, `${profileType.id}`))
@@ -60,6 +63,7 @@ profileTypesRouter
         .then(profileType => {
             //make sure profileType is found
             if (!profileType) {
+                logger.error(`ProfileType with id ${profileType_id} not found.`)
                 return res.status(404).json({
                     error: { message: `ProfileType Not Found` }
                 })
@@ -85,6 +89,7 @@ profileTypesRouter
             req.params.profileType_id
         )
         .then(() => {
+            logger.info(`ProfileType with id ${profileType_id} deleted.`)
             res.status(204).end()
         })
         .catch(next)
