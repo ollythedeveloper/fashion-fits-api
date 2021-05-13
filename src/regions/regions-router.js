@@ -64,7 +64,7 @@ regionsRouter
                         error: { message: `Region Not Found` }
                     })
                 }
-                res.region = region //save the profileType for the next middleware
+                res.region = region //save the region for the next middleware
                 next() //call next so the next middleware happens
             })
             .catch(next)

@@ -6,6 +6,7 @@ const helmet = require('helmet')
 const { NODE_ENV } = require('./config')
 const profileTypesRouter = require('./profileTypes/profileTypes-router')
 const regionsRouter = require('./regions/regions-router')
+const profilesRouter = require('./profiles/profiles-router')
 
 const app = express()
 
@@ -26,6 +27,8 @@ app.use(function validateBearerToken(req, res, next) {
     }
     next()
 })
+
+app.use('/api/profiles', profilesRouter)
 
 app.use('/api/regions', regionsRouter)
 
