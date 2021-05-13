@@ -4,6 +4,7 @@ const morgan = require('morgan')
 const cors = require('cors')
 const helmet = require('helmet')
 const { NODE_ENV } = require('./config')
+const profileTypesRouter = require('./profileTypes/profileTypes-router')
 
 const app = express()
 
@@ -16,7 +17,6 @@ app.use(helmet())
 app.use(cors())
 
 app.use(function validateBearerToken(req, res, next) {
-    console.log('Validating...')
     const apiToken = process.env.API_TOKEN
     const authToken = req.get('Authorization')
 
@@ -26,9 +26,7 @@ app.use(function validateBearerToken(req, res, next) {
     next()
 })
 
-app.get('/api/*', (req, res) => {
-    res.json({ok: true});
-});
+app.use('/api/profileTypes', profileTypesRouter)
 
 app.get('/', (req, res) => {
     res.send('Welcome to the Fashion Fits API!')
