@@ -77,9 +77,9 @@ profileTypesRouter
         res.json({
             id: res.profileType.id,
             name: xss(res.profileType.name), //sanitize name
-            bust: xss(res.profileType.bust), //sanitize bust
-            waist: xss(res.profileType.waist), //sanitize waist
-            hips: xss(res.profileType.hips) //sanitizr hips
+            bust: xss(res.profileType.bust).split(','), //sanitize bust
+            waist: xss(res.profileType.waist).split(','), //sanitize waist
+            hips: xss(res.profileType.hips).split(',') //sanitizr hips
         })
     })
     .delete((req, res, next) => {

@@ -2,7 +2,7 @@ const { expect } = require('chai')
 const knex = require('knex')
 const supertest = require('supertest')
 const app = require('../src/app')
-const { makeProfileTypesArray, makeMaliciousProfileType} = require('./profileTypes.fixtures')
+const { makeProfileTypesArray, makeMaliciousProfileType } = require('./profileTypes.fixtures')
 
 describe('ProfileTypes Endpoints', function () {
     let db
@@ -21,7 +21,7 @@ describe('ProfileTypes Endpoints', function () {
 
     afterEach('cleanup', () => db.raw('TRUNCATE profile_types, profiles RESTART IDENTITY CASCADE'))
 
-    describe.only(`GET /api/profileTypes`, () => {
+    describe(`GET /api/profileTypes`, () => {
         context(`Given no profileTypes`, () => {
             it(`responds with 200 and a empty list`, () => {
                 return supertest(app)
@@ -69,210 +69,219 @@ describe('ProfileTypes Endpoints', function () {
         })
     })
 
-    // describe(`GET /api/regions/:region_id`, () => {
-    //     context(`Given no regions`, () => {
-    //         it(`responds with 404`, () => {
-    //             const regionId = 123456
-    //             return supertest(app)
-    //                 .get(`/api/regions/${regionId}`)
-    //                 .set('Authorization', `Bearer ${process.env.API_TOKEN}`)
-    //                 .expect(404, { error: { message: `Region Not Found` } })
-    //         })
-    //     })
+    describe(`GET /api/profileTypes/:profileType_id`, () => {
+        context(`Given no profileTypes`, () => {
+            it(`responds with 404`, () => {
+                const profileTypeId = 123456
+                return supertest(app)
+                    .get(`/api/profileTypes/${profileTypeId}`)
+                    .set('Authorization', `Bearer ${process.env.API_TOKEN}`)
+                    .expect(404, { error: { message: `ProfileType Not Found` } })
+            })
+        })
 
-    //     context('Given there are regions in the database', () => {
-    //         const testRegions = makeRegionsArray()
+        context('Given there are profileTypes in the database', () => {
+            const testProfileTypes = makeProfileTypesArray()
 
-    //         beforeEach('insert regions', () => {
-    //             return db
-    //                 .into('regions')
-    //                 .insert(testRegions)
-    //         })
+            beforeEach('insert profileTypes', () => {
+                return db
+                    .into('profile_types')
+                    .insert(testProfileTypes)
+            })
 
-    //         it('responds with 200 and the specified region', () => {
-    //             const regionId = 2
-    //             const expectedRegion = testRegions[regionId - 1]
-    //             return supertest(app)
-    //                 .get(`/api/regions/${regionId}`)
-    //                 .set('Authorization', `Bearer ${process.env.API_TOKEN}`)
-    //                 .expect(200, expectedRegion)
-    //         })
-    //     })
-    // })
+            it('responds with 200 and the specified profileType', () => {
+                const profileTypeId = 2
+                const expectedProfileType = testProfileTypes[profileTypeId - 1]
+                return supertest(app)
+                    .get(`/api/profileTypes/${profileTypeId}`)
+                    .set('Authorization', `Bearer ${process.env.API_TOKEN}`)
+                    .expect(200, expectedProfileType)
+            })
+        })
+    })
 
-    // describe(`POST /api/regions`, () => {
-    //     it(`creates a region, responding with 201 and the new region`, function () {
-    //         const newRegion = {
-    //             country: 'Test new country',
-    //         }
-    //         return supertest(app)
-    //             .post(`/api/regions`)
-    //             .set('Authorization', `Bearer ${process.env.API_TOKEN}`)
-    //             .send(newRegion)
-    //             .expect(201)
-    //             .expect(res => {
-    //                 expect(res.body.country).to.eql(newRegion.country)
-    //                 expect(res.headers.location).to.eql(`/api/regions/${res.body.id}`)
-    //                 expect(res.body).to.have.property('id')
-    //             })
-    //             .then(res =>
-    //                 supertest(app)
-    //                     .get(`/api/regions/${res.body.id}`)
-    //                     .set('Authorization', `Bearer ${process.env.API_TOKEN}`)
-    //                     .expect(res.body)
-    //             )
+    describe(`POST /api/profileTypes`, () => {
+        it(`creates a profileType, responding with 201 and the new profileType`, function () {
+            const newProfileType = {
+                name: 'Test new name',
+                bust: ['first', 'second', 'third', 'fourth', 'fifth', 'sixth', 'seventh'],
+                waist: ['first', 'second', 'third', 'fourth', 'fifth', 'sixth', 'seventh'],
+                hips: ['first', 'second', 'third', 'fourth', 'fifth', 'sixth', 'seventh']
+            }
+            return supertest(app)
+                .post(`/api/profileTypes`)
+                .set('Authorization', `Bearer ${process.env.API_TOKEN}`)
+                .send(newProfileType)
+                .expect(201)
+                .expect(res => {
+                    expect(res.body.name).to.eql(newProfileType.name)
+                    expect(res.body.bust).to.eql(newProfileType.bust)
+                    expect(res.body.waist).to.eql(newProfileType.waist)
+                    expect(res.body.hips).to.eql(newProfileType.hips)
+                    expect(res.headers.location).to.eql(`/api/profileTypes/${res.body.id}`)
+                    expect(res.body).to.have.property('id')
+                })
+                .then(res =>
+                    supertest(app)
+                        .get(`/api/profileTypes/${res.body.id}`)
+                        .set('Authorization', `Bearer ${process.env.API_TOKEN}`)
+                        .expect(res.body)
+                )
 
-    //     })
-    //     const requiredFields = ['country']
+        })
+        const requiredFields = ['name', 'bust', 'waist', 'hips']
 
-    //     requiredFields.forEach(field => {
-    //         const newRegion = {
-    //             country: 'Test new country',
-    //         }
+        requiredFields.forEach(field => {
+            const newProfileType = {
+                name: 'Test new name',
+                bust: ['first', 'second', 'third', 'fourth', 'fifth', 'sixth', 'seventh'],
+                waist: ['first', 'second', 'third', 'fourth', 'fifth', 'sixth', 'seventh'],
+                hips: ['first', 'second', 'third', 'fourth', 'fifth', 'sixth', 'seventh']
+            }
 
-    //         it(`responds with 400 and an error message when the '${field}' is missing`, () => {
-    //             delete newRegion[field]
+            it(`responds with 400 and an error message when the '${field}' is missing`, () => {
+                delete newProfileType[field]
 
-    //             return supertest(app)
-    //                 .post('/api/regions')
-    //                 .set('Authorization', `Bearer ${process.env.API_TOKEN}`)
-    //                 .send(newRegion)
-    //                 .expect(400, {
-    //                     error: { message: `'${field}' is required` }
-    //                 })
-    //         })
-    //     })
+                return supertest(app)
+                    .post('/api/profileTypes')
+                    .set('Authorization', `Bearer ${process.env.API_TOKEN}`)
+                    .send(newProfileType)
+                    .expect(400, {
+                        error: { message: `'${field}' is required` }
+                    })
+            })
+        })
 
-    //     it(`removes XSS attack content from the response`, () => {
-    //         const { maliciousRegion, expectedRegion } = makeMaliciousRegion()
-    //         return supertest(app)
-    //             .post('/api/regions')
-    //             .set('Authorization', `Bearer ${process.env.API_TOKEN}`)
-    //             .send(maliciousRegion)
-    //             .expect(201)
-    //             .expect(res => {
-    //                 expect(res.body.country).to.eql(expectedRegion.country)
-    //             })
-    //     })
-    // })
+        it(`removes XSS attack content from the response`, () => {
+            const { maliciousProfileType, expectedProfileType } = makeMaliciousProfileType()
+            return supertest(app)
+                .post('/api/profileTypes')
+                .set('Authorization', `Bearer ${process.env.API_TOKEN}`)
+                .send(maliciousProfileType)
+                .expect(201)
+                .expect(res => {
+                    expect(res.body.name).to.eql(expectedProfileType.name)
+                })
+        })
+    })
 
-    // describe(`DELETE /api/regions/:region_id`, () => {
-    //     context(`Given no regions`, () => {
-    //         it(`responds with 404`, () => {
-    //             const regionId = 123456
-    //             return supertest(app)
-    //                 .delete(`/api/regions/${regionId}`)
-    //                 .set('Authorization', `Bearer ${process.env.API_TOKEN}`)
-    //                 .expect(404, { error: { message: `Region Not Found` } })
-    //         })
-    //     })
-    //     context('Given there are regions in the database', () => {
-    //         const testRegions = makeRegionsArray()
+    describe(`DELETE /api/profileTypes/:profileType_id`, () => {
+        context(`Given no profileTypes`, () => {
+            it(`responds with 404`, () => {
+                const profileTypeId = 123456
+                return supertest(app)
+                    .delete(`/api/profileTypes/${profileTypeId}`)
+                    .set('Authorization', `Bearer ${process.env.API_TOKEN}`)
+                    .expect(404, { error: { message: `ProfileType Not Found` } })
+            })
+        })
+        context('Given there are profileTypes in the database', () => {
+            const testProfileTypes = makeProfileTypesArray()
 
-    //         beforeEach('insert regions', () => {
-    //             return db
-    //                 .into('regions')
-    //                 .insert(testRegions)
-    //         })
+            beforeEach('insert profileTypes', () => {
+                return db
+                    .into('profile_types')
+                    .insert(testProfileTypes)
+            })
 
-    //         it('responds with 204 and removes the region', () => {
-    //             const idToRemove = 2
-    //             const expectedRegions = testRegions.filter(region => region.id !== idToRemove)
-    //             return supertest(app)
-    //                 .delete(`/api/regions/${idToRemove}`)
-    //                 .set('Authorization', `Bearer ${process.env.API_TOKEN}`)
-    //                 .then(res =>
-    //                     supertest(app)
-    //                         .get(`/api/regions`)
-    //                         .set('Authorization', `Bearer ${process.env.API_TOKEN}`)
-    //                         .expect(expectedRegions)
-    //                 )
-    //         })
-    //     })
-    // })
+            it('responds with 204 and removes the profileType', () => {
+                const idToRemove = 2
+                const expectedProfileTypes = testProfileTypes.filter(profileType => profileType.id !== idToRemove)
+                return supertest(app)
+                    .delete(`/api/profileTypes/${idToRemove}`)
+                    .set('Authorization', `Bearer ${process.env.API_TOKEN}`)
+                    .then(res =>
+                        supertest(app)
+                            .get(`/api/profileTypes`)
+                            .set('Authorization', `Bearer ${process.env.API_TOKEN}`)
+                            .expect(expectedProfileTypes)
+                    )
+            })
+        })
+    })
 
-    // describe(`PATCH /api/regions/:region_id`, () => {
-    //     context(`Given no regions`, () => {
-    //         it(`responds with 404`, () => {
-    //             const regionId = 123456
-    //             return supertest(app)
-    //                 .patch(`/api/regions/${regionId}`)
-    //                 .set('Authorization', `Bearer ${process.env.API_TOKEN}`)
-    //                 .expect(404, { error: { message: `Region Not Found` } })
-    //         })
-    //     })
-    //     context('Given there are regions in the database', () => {
-    //         const testRegions = makeRegionsArray()
+    describe(`PATCH /api/profileTypes/:profileType_id`, () => {
+        context(`Given no profileTypes`, () => {
+            it(`responds with 404`, () => {
+                const profileTypeId = 123456
+                return supertest(app)
+                    .patch(`/api/profileTypes/${profileTypeId}`)
+                    .set('Authorization', `Bearer ${process.env.API_TOKEN}`)
+                    .expect(404, { error: { message: `ProfileType Not Found` } })
+            })
+        })
+        context('Given there are profileTypes in the database', () => {
+            const testProfileTypes = makeProfileTypesArray()
 
-    //         beforeEach('insert regions', () => {
-    //             return db
-    //                 .into('regions')
-    //                 .insert(testRegions)
-    //         })
+            beforeEach('insert profileTypes', () => {
+                return db
+                    .into('profile_types')
+                    .insert(testProfileTypes)
+            })
 
-    //         it('responds with 204 and updates the region', () => {
-    //             const idToUpdate = 2
-    //             const updateRegion = {
-    //                 country: 'updated region'
-    //             }
-    //             const expectedRegion = {
-    //                 ...testRegions[idToUpdate - 1],
-    //                 ...updateRegion
-    //             }
-    //             return supertest(app)
-    //                 .patch(`/api/regions/${idToUpdate}`)
-    //                 .set('Authorization', `Bearer ${process.env.API_TOKEN}`)
-    //                 .send(updateRegion)
-    //                 .expect(204)
-    //                 .then(res =>
-    //                     supertest(app)
-    //                         .get(`/api/regions/${idToUpdate}`)
-    //                         .set('Authorization', `Bearer ${process.env.API_TOKEN}`)
-    //                         .expect(expectedRegion)
-    //                 )
+            it('responds with 204 and updates the profileType', () => {
+                const idToUpdate = 2
+                const updateProfileType = {
+                    name: 'updated name'
+                }
+                const expectedProfileType = {
+                    ...testProfileTypes[idToUpdate - 1],
+                    ...updateProfileType
+                }
+                return supertest(app)
+                    .patch(`/api/profileTypes/${idToUpdate}`)
+                    .set('Authorization', `Bearer ${process.env.API_TOKEN}`)
+                    .send(updateProfileType)
+                    .expect(204)
+                    .then(res =>
+                        supertest(app)
+                            .get(`/api/profileTypes/${idToUpdate}`)
+                            .set('Authorization', `Bearer ${process.env.API_TOKEN}`)
+                            .expect(expectedProfileType)
+                    )
 
-    //         })
+            })
 
-    //         it('responds with 400 when no required fields supplied', () => {
-    //             const idToUpdate = 2
-    //             return supertest(app)
-    //                 .patch(`/api/regions/${idToUpdate}`)
-    //                 .set('Authorization', `Bearer ${process.env.API_TOKEN}`)
-    //                 .send({ irrelavantField: 'boo' })
-    //                 .expect(400, {
-    //                     error: {
-    //                         message: `Request body must contain 'country'`
-    //                     }
-    //                 })
-    //         })
+            it('responds with 400 when no required fields supplied', () => {
+                const idToUpdate = 2
+                return supertest(app)
+                    .patch(`/api/profileTypes/${idToUpdate}`)
+                    .set('Authorization', `Bearer ${process.env.API_TOKEN}`)
+                    .send({ irrelavantField: 'boo' })
+                    .expect(400, {
+                        error: {
+                            message: `Request body must contain either 'name', 'bust', 'waist' or 'hips'`
+                        }
+                    })
+            })
 
-    //         it(`responds with 204 when updating only a subset of the fields`, () => {
-    //             const idToUpdate = 2
-    //             const updateRegion = {
-    //                 country: 'update the country',
-    //             }
-    //             const expectedRegion = {
-    //                 ...testRegions[idToUpdate - 1],
-    //                 ...updateRegion
-    //             }
+            it(`responds with 204 when updating only a subset of the fields`, () => {
+                const idToUpdate = 2
+                const updateProfileType = {
+                    name: 'update the name',
+                }
+                const expectedProfileType = {
+                    ...testProfileTypes[idToUpdate - 1],
+                    ...updateProfileType
+                }
 
-    //             return supertest(app)
-    //                 .patch(`/api/regions/${idToUpdate}`)
-    //                 .set('Authorization', `Bearer ${process.env.API_TOKEN}`)
-    //                 .send({
-    //                     ...updateRegion,
-    //                     fieldToIgnore: 'should not be in GET response'
-    //                 })
-    //                 .expect(204)
-    //                 .then(res => 
-    //                     supertest(app)
-    //                         .get(`/api/regions/${idToUpdate}`)
-    //                         .set('Authorization', `Bearer ${process.env.API_TOKEN}`)
-    //                         .expect(expectedRegion)
-    //                     )
-    //         })
+                return supertest(app)
+                    .patch(`/api/profileTypes/${idToUpdate}`)
+                    .set('Authorization', `Bearer ${process.env.API_TOKEN}`)
+                    .send({
+                        ...updateProfileType,
+                        fieldToIgnore: 'should not be in GET response'
+                    })
+                    .expect(204)
+                    .then(res =>
+                        supertest(app)
+                            .get(`/api/profileTypes/${idToUpdate}`)
+                            .set('Authorization', `Bearer ${process.env.API_TOKEN}`)
+                            .expect(expectedProfileType)
+                    )
+            })
 
-    //     })
-    // })
+        })
+    })
 
 })
