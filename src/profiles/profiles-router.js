@@ -10,11 +10,11 @@ const bodyParser = express.json()
 
 const serializeProfile = profile => ({
     id: profile.id,
-    profileTypeId: profile.profileTypeId,
-    regionId: profile.regionId,
+    profiletype_id: xss(profile.profiletype_id),
+    region_id: xss(profile.region_id),
     fit: xss(profile.fit),
     category: xss(profile.category),
-    numberSizes: xss(profile.numberSizes),
+    number_sizes: xss(profile.number_sizes).split(','),
     results: xss(profile.results)
 })
 
@@ -28,7 +28,7 @@ profilesRouter
             .catch(next)
     })
     .post(bodyParser, (req, res, next) => {
-        for (const field of ['fit', 'category', 'numberSizes', 'results']) {
+        for (const field of ['profiletype_id', 'region_id', 'fit', 'category', 'number_sizes', 'results']) {
             if (!req.body[field]) {
                 logger.error(`'${field}' is required`)
                 return res.status(400).send({
@@ -37,9 +37,9 @@ profilesRouter
             }
         }
 
-        const { fit, category, numberSizes, results } = req.body;
+        const { profiletype_id, region_id, fit, category, number_sizes, results } = req.body;
 
-        const newProfile = { fit, category, numberSizes, results }
+        const newProfile = { profiletype_id, region_id, fit, category, number_sizes, results }
 
         ProfilesService.insertProfile(
             req.app.get('db'),
@@ -78,11 +78,11 @@ profilesRouter
     .get((req, res, next) => {
         res.json({
             id: res.profile.id,
-            profileTypeId: res.profile.profileTypeId,
-            regionId: res.profile.regionId,
+            profiletype_id: res.profile.profiletype_id,
+            region_id: res.profile.region_id,
             fit: xss(res.profile.fit), //sanitize fit
             category: xss(res.profile.category), //sanitize category
-            numberSizes: xss(res.profile.numberSizes), //sanitize numberSizes
+            number_sizes: xss(res.profile.number_sizes), //sanitize numberSizes
             results: xss(res.profile.results) //sanitize results
         })
     })
@@ -99,14 +99,14 @@ profilesRouter
             .catch(next)
     })
     .patch(bodyParser, (req, res, next) => {
-        const { fit, category, numberSizes, results } = req.body
-        const profileToUpdate = { fit, category, numberSizes, results }
+        const { profiletype_id, region_id, fit, category, number_sizes, results } = req.body
+        const profileToUpdate = { profiletype_id, region_id, fit, category, number_sizes, results }
 
         const numberOfValues = Object.values(profileToUpdate).filter(Boolean).length
         if (numberOfValues === 0) {
             return res.status(400).json({
                 error: {
-                    message: `Request body must contain 'fit', 'category', 'numberSizes' or 'results'`
+                    message: `Request body must contain 'profiletype_id', 'region_id', 'fit', 'category', 'number_sizes' or 'results'`
                 }
             })
         }

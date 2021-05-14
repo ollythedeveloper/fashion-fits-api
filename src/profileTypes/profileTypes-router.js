@@ -10,9 +10,9 @@ const bodyParser = express.json()
 const serializeProfileType = profileType => ({
     id: profileType.id,
     name: xss(profileType.name),
-    bust: xss(profileType.bust),
-    waist: xss(profileType.waist),
-    hips: xss(profileType.hips)
+    bust: xss(profileType.bust).split(','),
+    waist: xss(profileType.waist).split(','),
+    hips: xss(profileType.hips).split(',')
 })
 
 profileTypesRouter

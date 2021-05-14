@@ -6,6 +6,6 @@ CREATE TABLE profiles (
         REFERENCES regions(id) ON DELETE SET NULL,
     fit TEXT NOT NULL,
     category TEXT NOT NULL,
-    number_sizes TEXT ARRAY[7] NOT NULL,
+    number_sizes TEXT [7] NOT NULL,
     results TEXT NOT NULL
 );
