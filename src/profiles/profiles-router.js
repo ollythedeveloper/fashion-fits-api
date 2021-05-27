@@ -3,7 +3,6 @@ const express = require('express')
 const xss = require('xss')
 const logger = require('../logger')
 const ProfilesService = require('./profiles-service')
-const { profile } = require('console')
 
 const profilesRouter = express.Router()
 const bodyParser = express.json()
