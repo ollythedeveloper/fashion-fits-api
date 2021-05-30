@@ -1,26 +1,38 @@
-# Fashion Fits API
+Fashion Fits API
+================
+This App allow users to find their clothing size in several countries and measurement types.
 
-This is a boilerplate project used for starting new projects!
+Live App: [Fashion Fits](https://fashion-fits.vercel.app/)
 
-## Set up
+Client Repo: [Fashion Fits Repo](https://github.com/ollythedeveloper/fashion-fitsi)
 
-Complete the following steps to start a new project (NEW-PROJECT-NAME):
+Screenshots
+-----------
+Landing Page:
+![landingPage](images/FF_Landing.png)
 
-1. Clone this repository to your local machine `git clone BOILERPLATE-URL NEW-PROJECTS-NAME`
-2. `cd` into the cloned repository
-3. Make a fresh start of the git history for this project with `rm -rf .git && git init`
-4. Install the node dependencies `npm install`
-5. Move the example Environment file to `.env` that will be ignored by git and read by the express server `mv example.env .env`
-6. Edit the contents of the `package.json` to use NEW-PROJECT-NAME instead of `"name": "express-boilerplate",`
+Convert/Result Page:
+![convertResultPage](images/FF_Convert-Result.png)
 
-## Scripts
+Set up
+======
 
-Start the application `npm start`
+Complete the following steps to set up locally:
 
-Start nodemon for the application `npm run dev`
+1. Clone this repository to your local machine 
+2. `cd` into the cloned repository and run npm install
+3. Create the dev and test databases (`fashion-fits` and `fashion-fits-test`)
+4. Update the `.env` with your local variables
+5. Run the migrations for dev `npm run migrate`
+6. Run the migrations for test `npm run migrate:test`
+7. Seed the dev database with each of the files located in the seed folder `psql -U <db-user> -d fashion-fits -f ./seeds/<file>`
+8. Run the test to make sure everything is working properly `npm t`
+9. Start the app `npm run dev`
 
-Run the tests `npm test`
 
-## Deploying
 
-When your new project is ready for deployment, add a new Heroku application with `heroku create`. This will make a new git remote called "heroku" and you can then `npm run deploy` which will push to this remote's main branch.
+Technology Used
+---------------
+* Node
+* Express
+* Postgres
