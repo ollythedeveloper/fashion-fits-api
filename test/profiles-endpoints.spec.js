@@ -4,7 +4,7 @@ const supertest = require('supertest')
 const app = require('../src/app')
 const { makeRegion, makeProfileType, makeProfilesArray, makeMaliciousProfile } = require('./profiles.fixtures')
 
-describe.only('Profiles Endpoints', function () {
+describe('Profiles Endpoints', function () {
     let db
 
     before('make knex instance', () => {
