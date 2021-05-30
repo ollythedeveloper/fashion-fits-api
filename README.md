@@ -1,6 +1,6 @@
 Fashion Fits API
 ================
-This App allow users to find their clothing size in several countries and measurement types.
+This App allows users to find their clothing size in several countries and measurement types.
 
 Live App: [Fashion Fits](https://fashion-fits.vercel.app/)
 
