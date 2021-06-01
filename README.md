@@ -29,19 +29,16 @@ Complete the following steps to set up locally:
 9. Start the app `npm run dev`
 
 
+
 # REST API
 
 The REST API to Fashion Fits is described below.
 
 Scheme: HTTPS
 
-## Get list of ProfileTypes
+## ProfileTypes
 
-### Request
-
-`GET /profileTypes/`  
-
-get list of all the profileTypes
+`GET /profileTypes/`  Get a list of all the profileTypes
 
 ### Responses
 
@@ -53,13 +50,7 @@ get list of all the profileTypes
 
 Response Content-Type: application/json
 
-## Add a new ProfileType
-
-### Request
-
-`POST /profileTypes/`  
-
-profileType that needs to be added to the store
+`POST /profileTypes/`  Creates a new profileType
 
 Example Value: 
 
@@ -85,17 +76,253 @@ Parameter Content Type: application/json
 
 401 Unauthorized 
 
+Response Content-Type: application/json
+
+`GET /profileTypes/{profileTypeId}`  Find profileType by ID
+
+### Responses
+
+**Code - Description**
+
+200 OK
+
+401 Unauthorized 
+
+404 Not Found
+
+Response Content-Type: application/json
+
+`DELETE /profileTypes/{profileTypeId}`  Delete profileType by ID
+
+### Responses
+
+**Code - Description**
+
+204 No Content
+
+401 Unauthorized 
+
+404 Not Found
+
+Response Content-Type: application/json
+
+`PATCH /profileTypes/{profileTypeId}`  Update an existing profileType by ID
+
+Example Value: 
+
+{
+
+    "name": "Updated profileType name"
+
+}
+
+### Responses
+
+**Code - Description**
+
+204 No Content
+
+400 Bad Request
+
+401 Unauthorized 
+
+404 Not Found
 
 Response Content-Type: application/json
 
 ---
 
+## Regions
 
+`GET /regions/`  Get a list of all the regions
 
+### Responses
 
+**Code - Description**
 
-Technology Used
----------------
+200 OK
+
+401 Unauthorized 
+
+Response Content-Type: application/json
+
+`POST /regions/`  Creates a new region
+
+Example Value: 
+
+{
+
+    "id": 0,
+    "country": "Country name"
+
+}
+
+Parameter Content Type: application/json
+
+### Responses
+
+**Code - Description**
+
+201 Created
+
+400 Bad Request
+
+401 Unauthorized 
+
+Response Content-Type: application/json
+
+`GET /regions/{regionId}`  Find region by ID
+
+### Responses
+
+**Code - Description**
+
+200 OK
+
+401 Unauthorized 
+
+404 Not Found
+
+Response Content-Type: application/json
+
+`DELETE /regions/{regionId}`  Delete region by ID
+
+### Responses
+
+**Code - Description**
+
+204 No Content
+
+401 Unauthorized 
+
+404 Not Found
+
+Response Content-Type: application/json
+
+`PATCH /regions/{regionId}`  Update an existing region by ID
+
+Example Value: 
+
+{
+
+    "country": "Updated country name"
+
+}
+
+### Responses
+
+**Code - Description**
+
+204 No Content
+
+400 Bad Request
+
+401 Unauthorized 
+
+404 Not Found
+
+Response Content-Type: application/json
+
+---
+
+## Profiles
+
+`GET /profiles/`  Get a list of all the profiles
+
+### Responses
+
+**Code - Description**
+
+200 OK
+
+401 Unauthorized 
+
+Response Content-Type: application/json
+
+`POST /profiles/`  Creates a new profile
+
+Example Value: 
+
+{
+
+    "id": 0,
+    "profiletype_id": 0,
+    "region_id": 0,
+    "fit": "profile fit",
+    "category": "profile category",
+    "number_sizes": ["1", "2", "3", "4", "5", "6", "7"],
+    "results": "profile results"
+
+}
+
+Parameter Content Type: application/json
+
+### Responses
+
+**Code - Description**
+
+201 Created
+
+400 Bad Request
+
+401 Unauthorized 
+
+Response Content-Type: application/json
+
+`GET /profiles/{profileId}`  Find profile by ID
+
+### Responses
+
+**Code - Description**
+
+200 OK
+
+401 Unauthorized 
+
+404 Not Found
+
+Response Content-Type: application/json
+
+`DELETE /profiles/{profileId}`  Delete profile by ID
+
+### Responses
+
+**Code - Description**
+
+204 No Content
+
+401 Unauthorized 
+
+404 Not Found
+
+Response Content-Type: application/json
+
+`PATCH /profiles/{profileId}`  Update an existing profile by ID
+
+Example Value: 
+
+{
+
+    "fit": "Updated profile fit"
+
+}
+
+### Responses
+
+**Code - Description**
+
+204 No Content
+
+400 Bad Request
+
+401 Unauthorized 
+
+404 Not Found
+
+Response Content-Type: application/json
+___ 
+
+## Technology Used
 * Node
 * Express
 * Postgres
