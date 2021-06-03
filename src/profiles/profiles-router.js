@@ -7,6 +7,7 @@ const ProfilesService = require('./profiles-service');
 const profilesRouter = express.Router();
 const bodyParser = express.json();
 
+// sanitize profile
 const serializeProfile = (profile) => ({
   id: profile.id,
   profiletype_id: xss(profile.profiletype_id),
